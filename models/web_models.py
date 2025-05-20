@@ -1,18 +1,31 @@
+from typing import Optional, List, Union
+
 from pydantic import BaseModel
 
 
 class LoginModel(BaseModel):
     email: str
-    password: str
+    password: Optional[str]
 
 class LoginResponseModel(BaseModel):
-    ok: str
-    result: str
+    ok: bool
+    result: bool
 
 class RegisterModel(BaseModel):
     email: str
-    password: str
+    password: Optional[str]
 
 class RegisterResponseModel(BaseModel):
-    ok: str
-    result: str
+    ok: bool
+    result: bool
+
+
+#Negative Models
+class ErrorDetail(BaseModel):
+    loc: Optional[list]
+    msg: Optional[str]
+    type: Optional[str]
+
+
+class ValidationError(BaseModel):
+    detail: Optional[str]=None
