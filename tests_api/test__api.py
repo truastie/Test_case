@@ -45,7 +45,7 @@ class TestApi:
         ),
         user_type=user_type
         )
-        PostgresClient().get_user(random_email, False, False)
+        PostgresClient().user_registration(random_email, False, False)
 
 
 
