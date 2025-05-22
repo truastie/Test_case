@@ -28,4 +28,4 @@ class ErrorDetail(BaseModel):
 
 
 class ValidationError(BaseModel):
-    detail: Optional[str]=None
+    detail: Optional[list]=[ErrorDetail]

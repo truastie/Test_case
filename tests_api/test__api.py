@@ -1,9 +1,12 @@
 import allure
 import pytest
 
+from clients.postrgess_client import PostgresClient
+from models.postgress_model import UserModel
+from utils import generator
 from utils.Client import Client
-from utils.api_case import WebApi
-from utils.config import LoginPageConfig, RegistrationPageConfig
+from utils.common_checker import check_difference_between_objects
+from utils.config import LoginPageConfig
 from models.web_models import LoginModel, LoginResponseModel, RegisterModel, RegisterResponseModel, ValidationError
 
 
@@ -13,35 +16,51 @@ class TestApi:
     @allure.severity(allure.severity_level.CRITICAL)
 
     def test_login(self):
-        client=Client().login(request=LoginModel(
-            email=LoginPageConfig.login_field,
-            password=LoginPageConfig.password_field
-        ), expected_model=LoginResponseModel(
-            ok=True,
-            result=True
-        ))
-        print(client)
+        response = Client().login(
+            request=LoginModel(
+                email=LoginPageConfig.login_field,
+                password=LoginPageConfig.password_field
+            ),
+            expected_model=LoginResponseModel(
+                ok=True,
+                result=True
+            )
+        )
+        PostgresClient().get_user(LoginPageConfig.login_field, False, True)
 
-    def test_registr(self):
+    @pytest.mark.positive
+    @pytest.mark.API
+    @allure.severity(allure.severity_level.CRITICAL)
+    @pytest.mark.parametrize('user_type', ['seller', 'supplier'])
+    def test_registr(self, user_type: str):
+        random_email = generator.random_email()
+        random_password = generator.random_password()
+
         Client().registration(request=RegisterModel(
-            email=RegistrationPageConfig.REGISTR_FIELD,
-            password=RegistrationPageConfig.PASSWORD_FIELD),
+            email=random_email,
+            password=random_password),
             expected_model=RegisterResponseModel(
             ok=True,
             result=True
-        ))
+        ),
+        user_type=user_type
+        )
+        PostgresClient().get_user(random_email, False, False)
+
 
 
 class TestApiNegative:
     @pytest.mark.negative
     @pytest.mark.API
     @allure.severity(allure.severity_level.CRITICAL)
-
+    @pytest.mark.parametrize('email', ['', '123', '@mail,r', '@gmail.ru'])
     @pytest.mark.parametrize('password', ['', '123'])
-    def test_login_incorrect_password(self, password:str):
+
+    def test_login_incorrect_data(self, email:str, password:str):
         response = Client().login(
-            request=LoginModel(email=LoginPageConfig.login_field, password=password),
+            request=LoginModel(email=email, password=password),
             expected_model=ValidationError(),
-            status_code=403
+            status_code=422
         )
-        print(response)
+        return response
+

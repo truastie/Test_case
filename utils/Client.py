@@ -51,9 +51,10 @@ class Client(ClientApi):
     def registration(self,
                      request: RegisterModel,
                      expected_model: RegisterResponseModel,
+                     user_type: str,
                      status_code: int = 200):
         response = self.request(
             method='POST',
-            url='/auth/sign-up/supplier',
+            url=f'/auth/sign-up/{user_type}',
             json=request.model_dump())
         return validate_response(response=response, model=expected_model, status_code=status_code)
