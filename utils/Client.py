@@ -44,6 +44,7 @@ class Client(ClientApi):
             url='/auth/sign-in',
             json=request.model_dump()
         )
+        self.auth_token = response.json().get("token")
         return validate_response(response=response, model=expected_model, status_code=status_code)
 
 
@@ -57,4 +58,16 @@ class Client(ClientApi):
             method='POST',
             url=f'/auth/sign-up/{user_type}',
             json=request.model_dump())
+        return validate_response(response=response, model=expected_model, status_code=status_code)
+
+    @allure.step('Get /confirmEmail')
+    def confirm_email(self,
+                      request,
+                      expected_model: LoginResponseModel,
+                      status_code):
+        response = self.request(
+            method='get',
+            url='auth/sign-up/confirmEmail?token={token}',
+            json=request.model_dump()
+        )
         return validate_response(response=response, model=expected_model, status_code=status_code)

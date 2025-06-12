@@ -2,6 +2,10 @@ import random
 import string
 import json
 
+# class TempMail:
+#     def __init__(self):
+#         self.email = self.random_email()
+#         self.messages = []
 
 def random_name():
     return ''.join([random.choice(string.ascii_lowercase + string.ascii_uppercase) for i in range(10)])

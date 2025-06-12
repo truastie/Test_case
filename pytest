@@ -1,0 +1,8 @@
+[pytest]
+
+markers=
+    UI: Ui testing.
+    API: API testing.
+    regress: tests for regression testing.
+    positive: positive tests.
+    negative: negative tests.

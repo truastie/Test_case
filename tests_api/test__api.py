@@ -16,14 +16,15 @@ class TestApi:
     @allure.severity(allure.severity_level.CRITICAL)
 
     def test_login(self):
-        response = Client().login(
-            request=LoginModel(
+        with allure.step(f"Log in with {LoginPageConfig.login_field} and {LoginPageConfig.password_field}"):
+            login_model=LoginModel(
                 email=LoginPageConfig.login_field,
-                password=LoginPageConfig.password_field
-            ),
-            expected_model=LoginResponseModel(
-                ok=True,
-                result=True
+                password=LoginPageConfig.password_field)
+        with allure.step(f'Log in by models {login_model} and {LoginResponseModel}'):
+            response= Client().login(request=login_model,
+                                    expected_model=LoginResponseModel(
+                                    ok=True,
+                                    result=True
             )
         )
         PostgresClient().get_user(LoginPageConfig.login_field, False, True)
@@ -35,17 +36,17 @@ class TestApi:
     def test_registr(self, user_type: str):
         random_email = generator.random_email()
         random_password = generator.random_password()
-
-        Client().registration(request=RegisterModel(
+        with allure.step(f'Registration by {random_email} and {random_password}'):
+            registr_model=RegisterModel(
             email=random_email,
-            password=random_password),
-            expected_model=RegisterResponseModel(
-            ok=True,
-            result=True
-        ),
-        user_type=user_type
-        )
-        PostgresClient().user_registration(random_email, False, False)
+            password=random_password)
+        with allure.step(f'Create user by {registr_model} and {RegisterResponseModel}'):
+            Client().registration(request=registr_model,
+                                  expected_model=RegisterResponseModel(
+                                    ok=True,
+                                    result=True),
+                                  user_type=user_type)
+        PostgresClient().get_user(random_email, False, False)
 
 
 
