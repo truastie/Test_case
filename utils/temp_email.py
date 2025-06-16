@@ -1,33 +1,48 @@
 import requests
+import string
+import random
 
-import requests
-from requests.adapters import HTTPAdapter, Retry
+MAIL_TM_BASE = "https://api.mail.tm"
 
-def get_session():
-    session = requests.Session()
-    retries = Retry(total=5, backoff_factor=1, status_forcelist=[502, 503, 504])
-    adapter = HTTPAdapter(max_retries=retries)
-    session.mount('https://', adapter)
-    session.mount('http://', adapter)
-    return session
 
-session = get_session()
+def create_temp_email():
+    local = ''.join(random.choices(string.ascii_lowercase + string.digits, k=10))
+    domain_resp = requests.get(f"{MAIL_TM_BASE}/domains")
+    if domain_resp.status_code != 200:
+        raise Exception(f"Ошибка получения домена: {domain_resp.status_code} {domain_resp.text}")
+    domains = domain_resp.json().get("hydra:member", [])
+    if not domains:
+        raise Exception("Не получены домены с mail.tm")
 
-def generate_random_email():
-    import random
-    import string
-    login = ''.join(random.choices(string.ascii_lowercase + string.digits, k=10))
-    email = f"{login}@1secmail.com"
-    return login, email
+    domain = domains[0]["domain"]
+    email = f"{local}@{domain}"
+    password = "StrongP@ssword123"
 
-def get_messages(login):
-    url = f"https://api.1secmail.com/?action=getMessages&login={login}&domain=1secmail.com"
-    response = session.get(url, timeout=10)
-    response.raise_for_status()
-    return response.json()
+    # Создаём аккаунт
+    account_data = {"address": email, "password": password}
+    create_resp = requests.post(f"{MAIL_TM_BASE}/accounts", json=account_data)
+    if create_resp.status_code not in (200, 201):
+        raise Exception(f"Ошибка при создании почты: {create_resp.status_code} {create_resp.text}")
 
-def read_message(login, message_id):
-    url = f"https://api.1secmail.com/?action=readMessage&login={login}&domain=1secmail.com&id={message_id}"
-    response = session.get(url, timeout=10)
-    response.raise_for_status()
+    # Получаем токен
+    token_resp = requests.post(f"{MAIL_TM_BASE}/token", json=account_data)
+    if token_resp.status_code != 200:
+        raise Exception(f"Ошибка получения токена: {token_resp.status_code} {token_resp.text}")
+
+    token = token_resp.json()["token"]
+    headers = {"Authorization": f"Bearer {token}"}
+
+    return email, headers
+
+def get_messages(headers):
+    response = requests.get(f"{MAIL_TM_BASE}/messages", headers=headers)
+    if response.status_code != 200:
+        raise requests.HTTPError(f"Ошибка API: {response.status_code} {response.text}")
+    return response.json()["hydra:member"]
+
+
+def read_message(message_id, headers):
+    response = requests.get(f"{MAIL_TM_BASE}/messages/{message_id}", headers=headers)
+    if response.status_code != 200:
+        raise requests.HTTPError(f"Ошибка API: {response.status_code} {response.text}")
     return response.json()
