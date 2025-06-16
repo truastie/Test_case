@@ -5,6 +5,7 @@ from clients.postrgess_client import PostgresClient
 from models.postgress_model import UserModel
 from utils import generator
 from utils.Client import Client
+from utils.api_case import ConfirmTempmail, EmailConfirmation
 from utils.common_checker import check_difference_between_objects
 from utils.config import LoginPageConfig
 from models.web_models import LoginModel, LoginResponseModel, RegisterModel, RegisterResponseModel, ValidationError
@@ -65,3 +66,17 @@ class TestApiNegative:
         )
         return response
 
+class TestRegistrationApiAbra:
+    @allure.title("Test register user and confirm email")
+    def test_register_user_user_api(self):
+        ConfirmTempmail().register_user('seller')
+        ConfirmTempmail().get_id_from_email()
+        ConfirmTempmail().get_token_from_email()
+        ConfirmTempmail().confirm_email()
+
+
+    @allure.title("Test register  and confirm email")
+    def test_register_seller_user_api(self):
+        EmailConfirmation().register_supplier()
+        EmailConfirmation().get_token_from_email()
+        EmailConfirmation().confirm_email()
