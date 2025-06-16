@@ -14,9 +14,9 @@ from utils.temp_email import generate_random_email, get_messages, read_message
 def test_registration(page, role:str):
     registration_page = RegistrationPage(page)
     with allure.step('Open base url'):
-        registration_page.open_page(BasePageConfig.registration_url)
-    # with allure.step('Click on registration button'):
-    #     registration_page.click_registration_button()
+        registration_page.open_page(BasePageConfig.base_url)
+    with allure.step('Click on registration button'):
+        registration_page.click_registration_button()
     if role == 'buyer':
         registration_page.click_be_buyer_button()
     elif role == 'seller':
