@@ -4,7 +4,6 @@ import random
 
 MAIL_TM_BASE = "https://api.mail.tm"
 
-
 def create_temp_email():
     local = ''.join(random.choices(string.ascii_lowercase + string.digits, k=10))
     domain_resp = requests.get(f"{MAIL_TM_BASE}/domains")
