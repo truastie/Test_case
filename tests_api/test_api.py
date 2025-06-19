@@ -2,14 +2,11 @@ import allure
 import pytest
 
 from clients.postrgess_client import PostgresClient
-from models.postgress_model import UserModel
 from utils import generator
-from utils.Client import Client, ClientApi
+from utils.Client import Client
 from utils.api import ConfirmTempmail, EmailConfirmation
-from utils.common_checker import check_difference_between_objects
 from utils.config import LoginPageConfig
-from models.web_models import LoginModel, LoginResponseModel, RegisterModel, RegisterResponseModel, ValidationError, \
-    PersonalInfoUpdate, PersonalInfoUpdateResponseModel
+from models.web_models import LoginModel, LoginResponseModel, RegisterModel, RegisterResponseModel, ValidationError
 
 
 class TestApi:
@@ -49,9 +46,6 @@ class TestApi:
                                     result=True),
                                   user_type=user_type)
         PostgresClient().get_user(random_email, False, False)
-
-
-
 
 
 
