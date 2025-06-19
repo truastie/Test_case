@@ -4,13 +4,15 @@ import allure
 import requests
 
 from utils.validate_resp import validate_response
-from models.web_models import LoginModel, LoginResponseModel, RegisterModel, RegisterResponseModel, ValidationError
+from models.web_models import LoginModel, LoginResponseModel, RegisterModel, RegisterResponseModel, ValidationError, \
+    PersonalInfoUpdate, PersonalInfoUpdateResponseModel
 
 
 class ClientApi:
     def __init__(self):
         self.base_url = 'https://api.dev.abra-market.com'
         self.session = self._initialize_session()
+        self.auth_token = None
 
     @staticmethod
     def _initialize_session():
@@ -19,9 +21,11 @@ class ClientApi:
     def request(self,
                 method: str,
                 url: str,
-                json=None,
-                headers: str = None):
-
+                json=None):
+        headers = {}
+        if self.auth_token:
+            # добавляем токен в headers, если есть
+            headers['Authorization'] = f'Bearer {self.auth_token}'
         response = self.session.request(
             method=method,
             url=self.base_url+url,
@@ -44,7 +48,20 @@ class Client(ClientApi):
             url='/auth/sign-in',
             json=request.model_dump()
         )
-        self.auth_token = response.json().get("token")
+        # token = response.json().get("token")
+        # print(f"Полученный токен: {token}")
+        # assert token, "Token не получен при логине"  # проверка
+        # self.auth_token = token
+        # return validate_response(response=response, model=expected_model, status_code=status_code)
+        print("Ответ при логине:", response.text)
+        try:
+            print("Ответ json:", response.json())
+        except Exception:
+            print("Не удалось распарсить JSON")
+        token = response.json().get("token")
+        print(f"Полученный токен: {token}")
+        assert token, "Token не получен при логине"
+        self.auth_token = token
         return validate_response(response=response, model=expected_model, status_code=status_code)
 
 
@@ -59,4 +76,16 @@ class Client(ClientApi):
             url=f'/auth/sign-up/{user_type}',
             json=request.model_dump())
         return validate_response(response=response, model=expected_model, status_code=status_code)
+
+    @allure.step('POST /personalInfo Update')
+    def post_info_update(self,
+                            request:PersonalInfoUpdate,
+                            expected_model: PersonalInfoUpdateResponseModel,
+                            status_code: int = 200):
+        response = self.request(
+            method='POST',
+            url=f'/users/account/personalInfo/update',
+            json = request.model_dump())
+        return validate_response(response=response, model=expected_model, status_code=status_code)
+
 

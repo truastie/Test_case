@@ -4,11 +4,12 @@ import pytest
 from clients.postrgess_client import PostgresClient
 from models.postgress_model import UserModel
 from utils import generator
-from utils.Client import Client
+from utils.Client import Client, ClientApi
 from utils.api import ConfirmTempmail, EmailConfirmation
 from utils.common_checker import check_difference_between_objects
 from utils.config import LoginPageConfig
-from models.web_models import LoginModel, LoginResponseModel, RegisterModel, RegisterResponseModel, ValidationError
+from models.web_models import LoginModel, LoginResponseModel, RegisterModel, RegisterResponseModel, ValidationError, \
+    PersonalInfoUpdate, PersonalInfoUpdateResponseModel
 
 
 class TestApi:
@@ -49,6 +50,42 @@ class TestApi:
                                   user_type=user_type)
         PostgresClient().get_user(random_email, False, False)
 
+    @pytest.mark.positive
+    @pytest.mark.API
+    @allure.severity(allure.severity_level.CRITICAL)
+    def test_info_update(self):
+        random_name = generator.random_name()
+        rand_last_name = generator.random_name()
+        rand_num = generator.random_digits_name()
+
+        with allure.step(f"Log in with {LoginPageConfig.login_field} and {LoginPageConfig.password_field}"):
+            client = Client()
+            login_model = LoginModel(
+                email=LoginPageConfig.login_field,
+                password=LoginPageConfig.password_field)
+            client.login(
+                login_model,
+                expected_model=LoginResponseModel(
+                    ok=True,
+                    result=True))
+
+        with allure.step('Put new Personal Info'):
+            request = PersonalInfoUpdate(
+                first_name=random_name,
+                last_name=rand_last_name,
+                country_id=+7,
+                phone_number=rand_num)
+
+        with allure.step('Update Personal Info'):
+            client.post_info_update(
+                request=request,
+                expected_model=PersonalInfoUpdateResponseModel(
+                    ok=True,
+                    result=True),
+                status_code=200)
+
+
+
 
 
 class TestApiNegative:
@@ -80,3 +117,5 @@ class TestRegistrationApiAbra:
         EmailConfirmation().register_supplier()
         EmailConfirmation().get_token_from_email()
         EmailConfirmation().confirm_email()
+
+

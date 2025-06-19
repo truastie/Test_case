@@ -20,6 +20,19 @@ class RegisterResponseModel(BaseModel):
     result: bool
 
 
+class PersonalInfoUpdate(BaseModel):
+    first_name: str
+    last_name: str
+    country_id: int
+    phone_number: int
+
+class PersonalInfoUpdateResponseModel(BaseModel):
+    ok: bool
+    result: bool
+    # detail: str
+    # error: str
+    # error_code: 0
+
 #Negative Models
 class ErrorDetail(BaseModel):
     loc: Optional[list]
