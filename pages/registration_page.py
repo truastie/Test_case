@@ -6,7 +6,7 @@ class RegistrationPage(BasePage):
     def __init__(self, page, timeout=10000):
         super().__init__(page, timeout)
         self.page = page
-        self.REGISTRATION_BUTTON = self.page.locator('//*[@id="root"]/div/div/header/div[1]/div/div[2]/div/a[1]')
+        self.REGISTRATION_BUTTON = self.page.locator('xpath=//*[@id="root"]/div/div/header/div[1]/div/div[2]/div/a[1]')
         self.LOGIN_FIELD = self.page.locator('xpath=//*[@id="root"]/div/div/div/form/div[2]/input')
         self.PASSWORD_FIELD = self.page.locator('xpath=//*[@id="root"]/div/div/div/form/div[3]/input')
         self.BE_BUYER_BUTTON = self.page.locator('//*[@id="root"]/div/div/div/form/div[1]/button[1]')
