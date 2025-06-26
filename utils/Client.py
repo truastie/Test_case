@@ -5,7 +5,7 @@ import requests
 
 from utils.validate_resp import validate_response
 from models.web_models import LoginModel, LoginResponseModel, RegisterModel, RegisterResponseModel, ValidationError, \
-    PersonalInfoUpdate, PersonalInfoUpdateResponseModel
+    PersonalInfoUpdate, PersonalInfoUpdateResponseModel, SellerAddressRequest, SellerAddressRequestResponseModel
 
 
 class ClientApi:
@@ -13,6 +13,9 @@ class ClientApi:
         self.base_url = 'https://api.dev.abra-market.com'
         self.session = self._initialize_session()
         self.auth_token = None
+
+    def set_token(self, token):
+        self.auth_token = token
 
     @staticmethod
     def _initialize_session():
@@ -86,6 +89,17 @@ class Client(ClientApi):
             method='POST',
             url=f'/users/account/personalInfo/update',
             json = request.model_dump())
+        return validate_response(response=response, model=expected_model, status_code=status_code)
+
+    @allure.step('POST /sellers/addresses/add')
+    def post_sellers_adding_address(self,
+                                    request:SellerAddressRequest,
+                                    expected_model:SellerAddressRequestResponseModel,
+                                    status_code: int = 201):
+        response = self.request(
+            method='POST',
+            url=f'/sellers/addresses/add',
+            json=request.model_dump())
         return validate_response(response=response, model=expected_model, status_code=status_code)
 
 

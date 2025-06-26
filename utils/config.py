@@ -1,7 +1,7 @@
 class LoginPageConfig:
     login_url='https://dev.abra-market.com/login'
-    login_field='nastyayarosh14@gmail.com'
-    password_field='Ff111222!'
+    login_field='yewaret470@exitbit.com'
+    password_field='Aa122333!'
 
 class BasePageConfig:
     base_url='https://dev.abra-market.com'

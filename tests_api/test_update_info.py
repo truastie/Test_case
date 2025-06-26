@@ -10,33 +10,38 @@ from utils.config import LoginPageConfig
 @pytest.mark.positive
 @pytest.mark.API
 @allure.severity(allure.severity_level.CRITICAL)
-def test_info_update(self):
-    random_name = generator.random_name()
-    rand_last_name = generator.random_name()
-    rand_num = generator.random_digits_name()
+class TestInfoAUpdate:
+    def test_info_update(self):
+        random_name = generator.random_name()
+        rand_last_name = generator.random_name()
+        rand_num = generator.random_digits_name()
 
-    with allure.step(f"Log in with {LoginPageConfig.login_field} and {LoginPageConfig.password_field}"):
-        client = Client()
-        login_model = LoginModel(
-            email=LoginPageConfig.login_field,
-            password=LoginPageConfig.password_field)
-        client.login(
-            login_model,
-            expected_model=LoginResponseModel(
+        with allure.step(f"Log in with {LoginPageConfig.login_field} and {LoginPageConfig.password_field}"):
+            client = Client()
+            login_model = LoginModel(
+                email=LoginPageConfig.login_field,
+                password=LoginPageConfig.password_field)
+            client.login(
+                login_model,
+                expected_model=LoginResponseModel(
                 ok=True,
                 result=True))
+        # client = Client()
+        # client.session.cookies.set(
+        #     'access_token_cookie',
+        #     'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEwMywiaWF0IjoxNzUwOTU1MDYwLCJuYmYiOjE3NTA5NTUwNjAsImp0aSI6IjdlZmRhMDYwLWFjNzYtNGJlNS05Y2M5LWYzMGY3MTgyNzJiNCIsImV4cCI6MTc1MTU1OTg2MCwidHlwZSI6ImFjY2VzcyIsImZyZXNoIjpmYWxzZX0.VGLyuCPLlE4iKuytfntoPWPTwVqfS5IeiQyUo7aEoaM'
+        # )
+        with allure.step('Put new Personal Info'):
+            request = PersonalInfoUpdate(
+                first_name=random_name,
+                last_name=rand_last_name,
+                country_id=+7,
+                phone_number=rand_num)
 
-    with allure.step('Put new Personal Info'):
-        request = PersonalInfoUpdate(
-            first_name=random_name,
-            last_name=rand_last_name,
-            country_id=+7,
-            phone_number=rand_num)
-
-    with allure.step('Update Personal Info'):
-        client.post_info_update(
-            request=request,
-            expected_model=PersonalInfoUpdateResponseModel(
+        with allure.step('Update Personal Info'):
+            client.post_info_update(
+                request=request,
+                expected_model=PersonalInfoUpdateResponseModel(
                 ok=True,
                 result=True),
-            status_code=200)
+                status_code=200)

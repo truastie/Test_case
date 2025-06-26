@@ -19,7 +19,6 @@ class RegisterResponseModel(BaseModel):
     ok: bool
     result: bool
 
-
 class PersonalInfoUpdate(BaseModel):
     first_name: str
     last_name: str
@@ -32,6 +31,22 @@ class PersonalInfoUpdateResponseModel(BaseModel):
     # detail: str
     # error: str
     # error_code: 0
+
+class SellerAddressRequest(BaseModel):
+    is_main: bool
+    country_id: Optional[int] = None
+    first_name: Optional[str]= None
+    last_name: Optional[str]= None
+    city: Optional[str]= None
+    street: Optional[str]= None
+    building: Optional[str]= None
+    apartment: Optional[str]= None
+    postal_code: Optional[str]= None
+
+class SellerAddressRequestResponseModel(BaseModel):
+    ok: bool
+    id: int
+
 
 #Negative Models
 class ErrorDetail(BaseModel):

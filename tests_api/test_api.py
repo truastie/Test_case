@@ -49,7 +49,6 @@ class TestApi:
 
 
 
-
 class TestApiNegative:
     @pytest.mark.negative
     @pytest.mark.API
