@@ -17,20 +17,19 @@ class TestInfoAUpdate:
         rand_num = generator.random_digits_name()
 
         with allure.step(f"Log in with {LoginPageConfig.login_field} and {LoginPageConfig.password_field}"):
+
+            # login_model = LoginModel(
+            #     email=LoginPageConfig.login_field,
+            #     password=LoginPageConfig.password_field)
+            # client.login(
+            #     login_model,
+            #     expected_model=LoginResponseModel(
+            #     ok=True,
+            #     result=True))
             client = Client()
-            login_model = LoginModel(
-                email=LoginPageConfig.login_field,
-                password=LoginPageConfig.password_field)
-            client.login(
-                login_model,
-                expected_model=LoginResponseModel(
-                ok=True,
-                result=True))
-        # client = Client()
-        # client.session.cookies.set(
-        #     'access_token_cookie',
-        #     'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEwMywiaWF0IjoxNzUwOTU1MDYwLCJuYmYiOjE3NTA5NTUwNjAsImp0aSI6IjdlZmRhMDYwLWFjNzYtNGJlNS05Y2M5LWYzMGY3MTgyNzJiNCIsImV4cCI6MTc1MTU1OTg2MCwidHlwZSI6ImFjY2VzcyIsImZyZXNoIjpmYWxzZX0.VGLyuCPLlE4iKuytfntoPWPTwVqfS5IeiQyUo7aEoaM'
-        # )
+            client.session.cookies.set(
+                'access_token_cookie',
+                LoginPageConfig.token)
         with allure.step('Put new Personal Info'):
             request = PersonalInfoUpdate(
                 first_name=random_name,

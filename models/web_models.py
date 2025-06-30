@@ -34,18 +34,28 @@ class PersonalInfoUpdateResponseModel(BaseModel):
 
 class SellerAddressRequest(BaseModel):
     is_main: bool
-    country_id: Optional[int] = None
-    first_name: Optional[str]= None
-    last_name: Optional[str]= None
-    city: Optional[str]= None
-    street: Optional[str]= None
-    building: Optional[str]= None
-    apartment: Optional[str]= None
-    postal_code: Optional[str]= None
+    country_id: int
+    first_name: str
+    last_name: str
+    city: str
+    street: str
+    building: str
+    apartment: str
+    postal_code: str
+
+# Модель для телефонных данных
+class SellerAddressPhoneRequest(BaseModel):
+    country_id: int
+    phone_number: str
+
+# Обертка для всего тела запроса
+class SellerAddressRequestBody(BaseModel):
+    seller_address_request: SellerAddressRequest
+    seller_address_phone_request: SellerAddressPhoneRequest
 
 class SellerAddressRequestResponseModel(BaseModel):
     ok: bool
-    id: int
+
 
 
 #Negative Models

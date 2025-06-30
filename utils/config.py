@@ -1,8 +1,8 @@
 class LoginPageConfig:
     login_url='https://dev.abra-market.com/login'
-    login_field='yewaret470@exitbit.com'
-    password_field='Aa122333!'
-
+    login_field='pevem99025@iridales.com'
+    password_field='Aa123456789!'
+    token= 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjE3LCJpYXQiOjE3NTEyOTc3NTcsIm5iZiI6MTc1MTI5Nzc1NywianRpIjoiNjM4OGZlZjMtYzcwNy00ZDU3LTgwYTUtZjY2YTExOWE1Yjg1IiwiZXhwIjoxNzUxOTAyNTU3LCJ0eXBlIjoiYWNjZXNzIiwiZnJlc2giOmZhbHNlfQ.FbAlV8uqDMrpECsAvujz9ICqr3nXc1K-IQ5Rse7-JSY'
 class BasePageConfig:
     base_url='https://dev.abra-market.com'
     registration_url= 'https://dev.abra-market.com/register'
