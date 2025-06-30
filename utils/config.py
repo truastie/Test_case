@@ -3,6 +3,8 @@ class LoginPageConfig:
     login_field='pevem99025@iridales.com'
     password_field='Aa123456789!'
     token= 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjE3LCJpYXQiOjE3NTEyOTc3NTcsIm5iZiI6MTc1MTI5Nzc1NywianRpIjoiNjM4OGZlZjMtYzcwNy00ZDU3LTgwYTUtZjY2YTExOWE1Yjg1IiwiZXhwIjoxNzUxOTAyNTU3LCJ0eXBlIjoiYWNjZXNzIiwiZnJlc2giOmZhbHNlfQ.FbAlV8uqDMrpECsAvujz9ICqr3nXc1K-IQ5Rse7-JSY'
+    supplier_token='eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjIxLCJpYXQiOjE3NTEzMDE0MDQsIm5iZiI6MTc1MTMwMTQwNCwianRpIjoiNDU2YjY0NGItMzYyMy00MzMwLWI3OTEtNjgwYzMwOTYxZmI5IiwiZXhwIjoxNzUxOTA2MjA0LCJ0eXBlIjoiYWNjZXNzIiwiZnJlc2giOmZhbHNlfQ.jF2ww0vL4HjOXmVJYuNnbgw83yeKUaeFW4U58A8e0TA'
+
 class BasePageConfig:
     base_url='https://dev.abra-market.com'
     registration_url= 'https://dev.abra-market.com/register'

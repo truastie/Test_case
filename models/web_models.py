@@ -56,6 +56,22 @@ class SellerAddressRequestBody(BaseModel):
 class SellerAddressRequestResponseModel(BaseModel):
     ok: bool
 
+class AddingElementtoFavModel(BaseModel):
+    product_id:int
+
+class AddingElementtoFavResponseModel(BaseModel):
+    ok: bool
+    result: bool
+
+
+class SupplierProductAddModel(BaseModel):
+    name: str
+    description: str
+    brand: int
+    category: int
+
+class SupplierProductAddResponseModel(BaseModel):
+    ok: bool
 
 
 #Negative Models

@@ -6,7 +6,8 @@ import requests
 from utils.validate_resp import validate_response
 from models.web_models import LoginModel, LoginResponseModel, RegisterModel, RegisterResponseModel, ValidationError, \
     PersonalInfoUpdate, PersonalInfoUpdateResponseModel, SellerAddressRequestResponseModel, \
-    SellerAddressRequestBody
+    SellerAddressRequestBody, AddingElementtoFavModel, AddingElementtoFavResponseModel, SupplierProductAddModel, \
+    SupplierProductAddResponseModel
 
 
 class ClientApi:
@@ -103,4 +104,23 @@ class Client(ClientApi):
             json=request.model_dump())
         return validate_response(response=response, model=expected_model, status_code=status_code)
 
+    def post_adding_element_to_fav(self,
+                                   request:AddingElementtoFavModel,
+                                   expected_model:AddingElementtoFavResponseModel,
+                                   status_code: int=200):
+        response = self.request(
+            method='POST',
+            url='/sellers/favorites/add',
+            json=request.model_dump())
+        return validate_response(response=response, model=expected_model, status_code=status_code)
 
+    def post_supplier_add_product(self,
+                                  request:SupplierProductAddModel,
+                                  expected_model:SupplierProductAddResponseModel,
+                                  status_code: int=200):
+
+        response = self.request(
+            method='POST',
+            url='/suppliers/products/add',
+            json=request.model_dump())
+        return validate_response(response=response, model=expected_model, status_code=status_code)
