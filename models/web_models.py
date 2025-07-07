@@ -35,9 +35,9 @@ class PersonalInfoUpdateResponseModel(BaseModel):
 class SellerAddressRequest(BaseModel):
     is_main: bool
     country_id: int
-    first_name: str
-    last_name: str
-    city: str
+    first_name: Optional[str]
+    last_name: Optional[str]
+    city: Optional[str]
     street: str
     building: str
     apartment: str
@@ -53,8 +53,12 @@ class SellerAddressRequestBody(BaseModel):
     seller_address_request: SellerAddressRequest
     seller_address_phone_request: SellerAddressPhoneRequest
 
+class SellerAddressResultModel(BaseModel):
+    id: int
+
 class SellerAddressRequestResponseModel(BaseModel):
     ok: bool
+    result: SellerAddressResultModel
 
 class AddingElementtoFavModel(BaseModel):
     product_id:int
@@ -73,7 +77,6 @@ class SupplierProductAddModel(BaseModel):
 class SupplierProductAddResponseModel(BaseModel):
     ok: bool
 
-
 #Negative Models
 class ErrorDetail(BaseModel):
     loc: Optional[list]
@@ -83,3 +86,19 @@ class ErrorDetail(BaseModel):
 
 class ValidationError(BaseModel):
     detail: Optional[list]=[ErrorDetail]
+
+
+class SupplierUpdateNotification(BaseModel):
+    on_advertising_campaigns: bool
+    on_order_updates: bool
+    on_order_reminders: bool
+    on_product_updates: bool
+    on_product_reminders: bool
+    on_reviews_of_products: bool
+    on_change_in_demand: bool
+    on_advice_from_abra: bool
+    on_account_support: bool
+
+class SupplierNotificationResponseModel(BaseModel):
+    ok: bool
+    result: bool

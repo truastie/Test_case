@@ -7,7 +7,7 @@ from utils.validate_resp import validate_response
 from models.web_models import LoginModel, LoginResponseModel, RegisterModel, RegisterResponseModel, ValidationError, \
     PersonalInfoUpdate, PersonalInfoUpdateResponseModel, SellerAddressRequestResponseModel, \
     SellerAddressRequestBody, AddingElementtoFavModel, AddingElementtoFavResponseModel, SupplierProductAddModel, \
-    SupplierProductAddResponseModel
+    SupplierProductAddResponseModel, SupplierUpdateNotification, SupplierNotificationResponseModel
 
 
 class ClientApi:
@@ -122,5 +122,16 @@ class Client(ClientApi):
         response = self.request(
             method='POST',
             url='/suppliers/products/add',
+            json=request.model_dump())
+        return validate_response(response=response, model=expected_model, status_code=status_code)
+
+
+    def post_supplier_notification(self,
+                                   request=SupplierUpdateNotification,
+                                   expected_model=SupplierNotificationResponseModel,
+                                   status_code=200):
+        response = self.request(
+            method='POST',
+            url='/suppliers/notifications/update',
             json=request.model_dump())
         return validate_response(response=response, model=expected_model, status_code=status_code)

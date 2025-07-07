@@ -12,7 +12,7 @@ class PostgresClient:
     @staticmethod
     def get_instance(request: str):
         connection = psycopg2.connect(database='postgres', user='test_user', password='nQhrNsjoajEr',
-                                      host='172.212.108.64', port=6502)
+                                      host='172.212.108.64', port=6532)
         cursor = connection.cursor()
         cursor.execute(request)
         return cursor.fetchall()

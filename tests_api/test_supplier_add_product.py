@@ -23,8 +23,8 @@ class TestSupplierAddProduct:
             request=SupplierProductAddModel(
                 name= random_name,
                 description= random_name,
-                brand=17,
-                category=6)
+                brand=21,
+                category=5)
 
         with allure.step('Add new product'):
             client.post_supplier_add_product(request=request, expected_model=SupplierProductAddResponseModel(ok=True),
