@@ -1,5 +1,5 @@
 from typing import Optional, List, Union
-
+from datetime import datetime
 from pydantic import BaseModel
 
 
@@ -102,3 +102,36 @@ class SupplierUpdateNotification(BaseModel):
 class SupplierNotificationResponseModel(BaseModel):
     ok: bool
     result: bool
+
+class ApplicationResponseBoolModel(BaseModel):
+    ok: bool
+    result: Optional[bool] = None
+    detail: Optional[str] = None
+    error: Optional[str] = None
+    error_code: Optional[int] = None
+
+class Company(BaseModel):
+    id: int
+    created_at: Optional[datetime] = None
+    updated_at: Optional[datetime] = None
+    name: str
+    year_established: int
+    employees_number_id: int
+
+class ApplicationResponseCompanyModel(BaseModel):
+    ok: bool
+    result: Optional[Company] = None
+    detail: Optional[str] = None
+    error: Optional[str] = None
+    error_code: Optional[int] = None
+
+class ForgotPasswordResponse(BaseModel):
+    ok: Optional[bool] = True
+    result: Optional[bool] = True
+    # detail: Optional[str]
+    # error: Optional[str]
+    error_code: Optional[int] = 0
+
+class ResetPasswordRequest(BaseModel):
+    new_password: Optional[str]
+    confirm_password: Optional[str]

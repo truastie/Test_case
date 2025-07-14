@@ -1,3 +1,4 @@
+import json
 from typing import Union
 
 import allure
@@ -7,7 +8,8 @@ from utils.validate_resp import validate_response
 from models.web_models import LoginModel, LoginResponseModel, RegisterModel, RegisterResponseModel, ValidationError, \
     PersonalInfoUpdate, PersonalInfoUpdateResponseModel, SellerAddressRequestResponseModel, \
     SellerAddressRequestBody, AddingElementtoFavModel, AddingElementtoFavResponseModel, SupplierProductAddModel, \
-    SupplierProductAddResponseModel, SupplierUpdateNotification, SupplierNotificationResponseModel
+    SupplierProductAddResponseModel, SupplierUpdateNotification, SupplierNotificationResponseModel, \
+    ApplicationResponseBoolModel, ApplicationResponseCompanyModel, ResetPasswordRequest, ForgotPasswordResponse
 
 
 class ClientApi:
@@ -16,8 +18,8 @@ class ClientApi:
         self.session = self._initialize_session()
         self.auth_token = None
 
-    # def set_token(self, token):
-    #     self.auth_token = token
+    def set_token(self, token):
+        self.auth_token = token
 
     @staticmethod
     def _initialize_session():
@@ -127,11 +129,51 @@ class Client(ClientApi):
 
 
     def post_supplier_notification(self,
-                                   request=SupplierUpdateNotification,
-                                   expected_model=SupplierNotificationResponseModel,
-                                   status_code=200):
+                                   request:SupplierUpdateNotification,
+                                   expected_model:SupplierNotificationResponseModel,
+                                   status_code: int=200):
+        payload = {
+            "subject": request.model_dump()
+        }
+        print("Отправляем тело:", json.dumps(payload))
         response = self.request(
             method='POST',
             url='/suppliers/notifications/update',
-            json=request.model_dump())
+            json=payload
+        )
+        print("Отправляемое тело:", request.model_dump())
+        return validate_response(response=response, model=expected_model, status_code=status_code)
+
+    def get_company_id(self,
+                       company_id,
+                       expected_model: ApplicationResponseCompanyModel,
+                       status_code):
+        response = self.request(
+            method='get',
+            url=f'/companies/{company_id}/info'
+        )
+        return validate_response(response=response, model=expected_model, status_code=status_code)
+
+
+    @allure.step('DELETE /delete')
+    def delete_account(self,
+                       expected_model: ApplicationResponseBoolModel,
+                       status_code):
+        response = self.request(
+            method='delete',
+            url='users/account/delete'
+        )
+        return validate_response(response=response, model=expected_model, status_code=status_code)
+
+    @allure.step('POST /users/password/forgot')
+    def forgot_password(self, email: str, expected_model, status_code=200):
+        response = self.request(method='post', url=f'/users/password/forgot?email={email}')
+        return validate_response(response=response, model=expected_model, status_code=status_code)
+
+    @allure.step('POST /users/password/reset')
+    def reset_password(self, token: str,
+                       request: ResetPasswordRequest,
+                       expected_model: ForgotPasswordResponse,
+                       status_code=200):
+        response = self.request(method='post', url=f'/users/password/reset?token={token}', json=request.model_dump())
         return validate_response(response=response, model=expected_model, status_code=status_code)
