@@ -1,7 +1,7 @@
 import allure
 import pytest
 
-from models.web_models import AddingElementtoFavModel, AddingElementtoFavResponseModel
+from models.web_models import AddingElementtoFavModel, AddingElementtoFavResponseModel, RemoveElementfromFav
 from utils.Client import Client
 from utils.config import LoginPageConfig
 
@@ -22,3 +22,17 @@ class TestFavorites:
         with allure.step('Adding Element to fav'):
             client.post_adding_element_to_fav(request=request, expected_model=AddingElementtoFavResponseModel(ok=True, result=True),
                                               status_code=200)
+
+    @allure.title("Remove product from favorites")
+
+    def test_delete_element_from_fav(self):
+        with allure.step(f"Log in with {LoginPageConfig.login_field} and {LoginPageConfig.password_field}"):
+            client = Client()
+            client.session.cookies.set(
+                'access_token_cookie',
+                LoginPageConfig.token)
+        with allure.step('Delete element from fav'):
+            client.delete_element_from_favorites(
+            request=RemoveElementfromFav(product_id=1774),
+            expected_model=AddingElementtoFavResponseModel(ok=True, result=True),
+            status_code=200)

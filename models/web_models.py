@@ -56,6 +56,11 @@ class SellerAddressRequestBody(BaseModel):
 class SellerAddressResultModel(BaseModel):
     id: int
 
+
+class DeleteSellerAddressResponse(BaseModel):
+    ok: bool
+    result: bool
+
 class SellerAddressRequestResponseModel(BaseModel):
     ok: bool
     result: SellerAddressResultModel
@@ -66,7 +71,8 @@ class AddingElementtoFavModel(BaseModel):
 class AddingElementtoFavResponseModel(BaseModel):
     ok: bool
     result: bool
-
+class RemoveElementfromFav(BaseModel):
+    product_id:int
 
 class SupplierProductAddModel(BaseModel):
     name: str

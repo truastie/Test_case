@@ -9,7 +9,8 @@ from models.web_models import LoginModel, LoginResponseModel, RegisterModel, Reg
     PersonalInfoUpdate, PersonalInfoUpdateResponseModel, SellerAddressRequestResponseModel, \
     SellerAddressRequestBody, AddingElementtoFavModel, AddingElementtoFavResponseModel, SupplierProductAddModel, \
     SupplierProductAddResponseModel, SupplierUpdateNotification, SupplierNotificationResponseModel, \
-    ApplicationResponseBoolModel, ApplicationResponseCompanyModel, ResetPasswordRequest, ForgotPasswordResponse
+    ApplicationResponseBoolModel, ApplicationResponseCompanyModel, ResetPasswordRequest, ForgotPasswordResponse, \
+    RemoveElementfromFav,DeleteSellerAddressResponse
 
 
 class ClientApi:
@@ -28,6 +29,7 @@ class ClientApi:
     def request(self,
                 method: str,
                 url: str,
+                params=None,
                 json=None):
         headers = {}
         if self.auth_token:
@@ -36,6 +38,7 @@ class ClientApi:
         response = self.session.request(
             method=method,
             url=self.base_url+url,
+            params=params,
             headers=headers,
             json=json
         )
@@ -106,6 +109,17 @@ class Client(ClientApi):
             json=request.model_dump())
         return validate_response(response=response, model=expected_model, status_code=status_code)
 
+    def delete_sellers_address(self,
+                               expected_model:DeleteSellerAddressResponse,
+                               address_id,
+                               status_code=200):
+
+        response=self.request(
+            method='DELETE',
+            url=f'/sellers/addresses/{address_id}/remove'
+        )
+
+        return validate_response(response=response, model=expected_model, status_code=status_code)
     def post_adding_element_to_fav(self,
                                    request:AddingElementtoFavModel,
                                    expected_model:AddingElementtoFavResponseModel,
@@ -114,6 +128,20 @@ class Client(ClientApi):
             method='POST',
             url='/sellers/favorites/add',
             json=request.model_dump())
+        return validate_response(response=response, model=expected_model, status_code=status_code)
+
+    @allure.step('DELETE / remove product from favorites seller')
+    def delete_element_from_favorites(self,
+                                      request:RemoveElementfromFav,
+                                      expected_model:AddingElementtoFavResponseModel,
+                                      status_code: int=200):
+        response = self.request(
+            method='DELETE',
+            url='/sellers/favorites/remove',
+            params={'product_id': request.product_id}
+        )
+
+        print(response)
         return validate_response(response=response, model=expected_model, status_code=status_code)
 
     def post_supplier_add_product(self,
@@ -125,7 +153,9 @@ class Client(ClientApi):
             method='POST',
             url='/suppliers/products/add',
             json=request.model_dump())
+
         return validate_response(response=response, model=expected_model, status_code=status_code)
+
 
 
     def post_supplier_notification(self,
@@ -166,8 +196,13 @@ class Client(ClientApi):
         return validate_response(response=response, model=expected_model, status_code=status_code)
 
     @allure.step('POST /users/password/forgot')
-    def forgot_password(self, email: str, expected_model, status_code=200):
-        response = self.request(method='post', url=f'/users/password/forgot?email={email}')
+    def forgot_password(self,
+                        email: str,
+                        expected_model,
+                        status_code=200):
+        response = self.request(
+            method='post',
+            url=f'/users/password/forgot?email={email}')
         return validate_response(response=response, model=expected_model, status_code=status_code)
 
     @allure.step('POST /users/password/reset')
@@ -175,5 +210,8 @@ class Client(ClientApi):
                        request: ResetPasswordRequest,
                        expected_model: ForgotPasswordResponse,
                        status_code=200):
-        response = self.request(method='post', url=f'/users/password/reset?token={token}', json=request.model_dump())
+        response = self.request(
+            method='post',
+            url=f'/users/password/reset?token={token}',
+            json=request.model_dump())
         return validate_response(response=response, model=expected_model, status_code=status_code)
