@@ -19,7 +19,7 @@ class PostgresClient:
 
     def get_user(self, email: str, is_deleted: bool, is_verified: bool):
         # result = self.get_instance('select * from "user" u where email = '+ f"'{email}'")
-        results = self.get_instance('SELECT * FROM "user" WHERE email = ?', (email,))
+        results = self.get_instance('SELECT * FROM "user" WHERE email = ?', (email))
         assert len(results) == 1, 'No record found'
         actual_model = UserModel(email=results[0][3], is_deleted=results[0][1], is_verified=results[0][0])
         expected_model = UserModel(email=email, is_deleted=is_deleted, is_verified=is_verified)

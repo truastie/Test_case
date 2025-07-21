@@ -26,9 +26,7 @@ import time
 import allure
 import requests
 import re
-from playwright.sync_api import expect
 
-from cloudscraper import session
 
 from utils import generator
 from utils.config import LoginPageConfig

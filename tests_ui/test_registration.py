@@ -46,12 +46,12 @@ class TestRegistration:
                     message_id = messages[0]['id']
                     break
             except requests.HTTPError as e:
-                print(f"Ошибка API: {e}")
+                print(f"Mistake of API: {e}")
             time.sleep(1)
 
-        assert message_id is not None, "Письмо с подтверждением не пришло"
+        assert message_id is not None, "The message didn't recieved"
         message = read_message(message_id, headers)
-        print("Содержимое письма:", message)
+        print("Contets of the letters:", message)
 
 
 class TestNegativeRegistration:

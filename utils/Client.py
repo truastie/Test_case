@@ -191,13 +191,13 @@ class Client(ClientApi):
                                    expected_model:SupplierNotificationResponseModel,
                                    status_code: int=200):
         payload = json.loads(request.model_dump_json())
-        print("Отправляем тело:", json.dumps(payload))
+        print("Sending body:", json.dumps(payload))
         response = self.request(
             method='POST',
             url='/suppliers/notifications/update',
             json=payload
         )
-        print("Ответ API:", response.text)
+        print("API answer:", response.text)
         return validate_response(response=response, model=expected_model, status_code=status_code)
 
     def get_company_id(self,
