@@ -29,7 +29,9 @@ class ClientApi:
     def request(self,
                 method: str,
                 url: str,
+                data=None,
                 params=None,
+                files=None,
                 json=None):
         headers = {}
         if self.auth_token:
@@ -38,7 +40,9 @@ class ClientApi:
         response = self.session.request(
             method=method,
             url=self.base_url+url,
+            data=data,
             params=params,
+            files=files,
             headers=headers,
             json=json
         )
@@ -149,11 +153,35 @@ class Client(ClientApi):
                                   expected_model:SupplierProductAddResponseModel,
                                   status_code: int=200):
 
-        response = self.request(
-            method='POST',
-            url='/suppliers/products/add',
-            json=request.model_dump())
-
+        # response = self.request(
+        #     method='POST',
+        #     url='/suppliers/products/add',
+        #     json=request.model_dump())
+        #
+        # return validate_response(response=response, model=expected_model, status_code=status_code)
+        files = {}
+        data = {
+            'name': request.name,
+            'description': request.description,
+            'brand': str(request.brand),
+            'category': str(request.category),
+        }
+        if request.image_path:
+            with open(request.image_path, 'rb') as img:
+                files['image'] = (
+                request.image_path.split("\\")[-1], img, 'pic.png')
+                response = self.request(
+                    method='POST',
+                    url='/suppliers/products/add',
+                    data=data,
+                    files=files
+                )
+        else:
+            response = self.request(
+                method='POST',
+                url='/suppliers/products/add',
+                data=data
+            )
         return validate_response(response=response, model=expected_model, status_code=status_code)
 
 
@@ -162,16 +190,14 @@ class Client(ClientApi):
                                    request:SupplierUpdateNotification,
                                    expected_model:SupplierNotificationResponseModel,
                                    status_code: int=200):
-        payload = {
-            "subject": request.model_dump()
-        }
+        payload = json.loads(request.model_dump_json())
         print("Отправляем тело:", json.dumps(payload))
         response = self.request(
             method='POST',
             url='/suppliers/notifications/update',
             json=payload
         )
-        print("Отправляемое тело:", request.model_dump())
+        print("Ответ API:", response.text)
         return validate_response(response=response, model=expected_model, status_code=status_code)
 
     def get_company_id(self,

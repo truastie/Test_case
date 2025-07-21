@@ -24,8 +24,11 @@ class TestSupplierAddProduct:
                 name= random_name,
                 description= random_name,
                 brand=21,
-                category=5)
+                category=5,
+                image_path=r'C:\Users\nasty\PycharmProjects\Test_case\tests_api\pic.png')
 
         with allure.step('Add new product'):
             client.post_supplier_add_product(request=request, expected_model=SupplierProductAddResponseModel(ok=True),
                                              status_code=200)
+
+

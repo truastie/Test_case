@@ -79,6 +79,7 @@ class SupplierProductAddModel(BaseModel):
     description: str
     brand: int
     category: int
+    image_path: Optional[str] = None
 
 class SupplierProductAddResponseModel(BaseModel):
     ok: bool

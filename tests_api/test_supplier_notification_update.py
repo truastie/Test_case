@@ -14,7 +14,7 @@ class TestSupplierAddProduct:
     def test_supplier_adding_product(self):
         with allure.step(f"Log in with {LoginPageConfig.supplier_token}"):
             client = Client()
-            print(f"Используем токен: {LoginPageConfig.supplier_token}")  # для отладки
+            print(f"Используем токен: {LoginPageConfig.supplier_token}")
             client.set_token = LoginPageConfig.supplier_token
             client.session.cookies.set('access_token_cookie', LoginPageConfig.supplier_token)
         with allure.step(f'Fill request'):
